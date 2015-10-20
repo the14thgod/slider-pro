@@ -16,7 +16,7 @@
 	-o-transition: none;
 }
 
-.slider-pro a {
+.slider-pro .sp-image-container > a {
 	position: static;
 	transition: none !important;
 	-moz-transition: none !important;

@@ -310,11 +310,11 @@
 /* Touch Swipe
 --------------------------------------------------*/
 .sp-grab {
-	cursor: url(images/openhand.cur), move;
+	cursor: url('../images/openhand.cur'), move;
 }
 
 .sp-grabbing {
-	cursor: url(images/closedhand.cur), move;
+	cursor: url('../images/closedhand.cur'), move;
 }
 
 .sp-selectable {
@@ -760,7 +760,7 @@ a.sp-video:after {
 	-o-transition: none;
 }
 
-.slider-pro a {
+.slider-pro .sp-image-container > a {
 	position: static;
 	transition: none !important;
 	-moz-transition: none !important;
