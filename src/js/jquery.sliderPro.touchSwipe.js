@@ -195,10 +195,15 @@
 				// the new index of the selected slide. 
 				var nextSlideIndex = this.slidesOrder[ $.inArray( this.selectedSlideIndex, this.slidesOrder ) - slideArrayDistance ];
 
+				// Animate Layers out
+				if(this.settings.swipeLayersOut === true){
+					this.hideLayers( this.selectedSlideIndex );
+				}
+
 				if ( this.settings.loop === true ) {
 					this.gotoSlide( nextSlideIndex );
 				} else {
-					if ( typeof nextSlideIndex !== 'undefined' ) {
+					if ( typeof nextSlideIndex !== 'undefined' ) {					
 						this.gotoSlide( nextSlideIndex );
 					} else {
 						this._moveTo( oldSlidesPosition );

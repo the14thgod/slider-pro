@@ -241,6 +241,10 @@
 			// going to a new slide
 			waitForLayers: false,
 
+			// Indicates whether the slider will animate the layers when swipping/draging
+			// only applicable with touchSwipe module
+			swipeLayersOut: false,
+
 			// Indicates whether the layers will be scaled automatically
 			autoScaleLayers: true,
 
