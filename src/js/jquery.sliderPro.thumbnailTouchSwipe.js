@@ -67,10 +67,6 @@
 
 		// Called when the thumbnail scroller starts being dragged
 		_onThumbnailTouchStart: function( event ) {
-			// Disable dragging if the element is set to allow selections
-			if ( $( event.target ).closest( '.sp-selectable' ).length >= 1 ) {
-				return;
-			}
 
 			var that = this,
 				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
@@ -79,11 +75,6 @@
 			if ( typeof event.originalEvent.touches === 'undefined' ) {
 				event.preventDefault();
 			}
-
-			// Disable click events on links
-			$( event.target ).parents( '.sp-thumbnail-container' ).find( 'a' ).one( 'click.' + NS, function( event ) {
-				event.preventDefault();
-			});
 
 			// Get the initial position of the mouse pointer and the initial position
 			// of the thumbnail scroller

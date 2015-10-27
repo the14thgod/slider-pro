@@ -317,10 +317,6 @@
 	cursor: url('../images/closedhand.cur'), move;
 }
 
-.sp-selectable {
-	cursor: default;
-}
-
 /* Caption
 --------------------------------------------------*/
 .sp-caption-container {
