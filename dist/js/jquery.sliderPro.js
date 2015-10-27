@@ -2715,7 +2715,7 @@
 
 				// Initialize the layers
 				this.$slide.find( '.sp-layer:not([ data-layer-init ])' ).each(function() {
-					var layer = new Layer( $( this ) );
+					var layer = new Layer( $( this ), that.settings.adaptiveMode);
 
 					// Add the 'layers' array to the slide objects (instance of SliderProSlide)
 					if ( typeof element.layers === 'undefined' ) {
@@ -2845,9 +2845,10 @@
 
 			$.each( animatedLayers, function( index, element ) {
 
-				// If the layer is already visible, increment the counter directly, else wait 
-				// for the layer's showing animation to complete.
-				if ( element.isVisible() === true ) {
+				// If the layer is already visible and not adaptive(need to animate all layers else appears buggy)
+				// increment the counter directly,
+				// else wait for the layer's showing animation to complete.
+				if ( element.isVisible() === true && !that.settings.adaptiveMode ) {
 					layerCounter++;
 
 					if ( layerCounter === animatedLayers.length ) {
@@ -2884,9 +2885,10 @@
 
 			$.each( animatedLayers, function( index, element ) {
 
-				// If the layer is already invisible, increment the counter directly, else wait 
+				// If the layer is already invisible and not adaptive(need to animate all layers else appears buggy), 
+				// increment the counter directly, else wait 
 				// for the layer's hiding animation to complete.
-				if ( element.isVisible() === false ) {
+				if ( element.isVisible() === false && !that.settings.adaptiveMode ) {
 					layerCounter++;
 
 					if ( layerCounter === animatedLayers.length ) {
@@ -2919,6 +2921,9 @@
 		},
 
 		layersDefaults: {
+
+			// Indicate if js animations should avoid adding top/left css properties
+			adaptiveMode: false,
 
 			// Indicates whether the slider will wait for the layers to disappear before
 			// going to a new slide
@@ -2965,10 +2970,13 @@
 		slideDestroy.apply( this );
 	};
 
-	var Layer = function( layer ) {
+	var Layer = function( layer, adaptiveMode ) {
 
 		// Reference to the layer jQuery element
 		this.$layer = layer;
+
+		// is the slider adaptive?
+		this.adaptiveMode = adaptiveMode;
 
 		// Indicates whether a layer is currently visible or hidden
 		this.visible = false;
@@ -3021,6 +3029,7 @@
 			if ( this.$layer.hasClass( 'sp-static' ) ) {
 				this._setStyle();
 			} else {
+				// Visually hide layer
 				this.$layer.css({ 'visibility': 'hidden' });
 			}
 		},
@@ -3083,7 +3092,7 @@
 					this.$layer.css( 'width', this.$layer.outerWidth( true ) );
 				}
 
-				this.$layer.css({ 'marginLeft': 'auto', 'marginRight': 'auto', 'left': this.horizontalPosition, 'right': 0 });
+				this.$layer.css({ 'left': this.horizontalPosition, 'right': 0 });
 			} else {
 				this.$layer.css( this.horizontalProperty, this.horizontalPosition );
 			}
@@ -3097,10 +3106,63 @@
 					this.$layer.css( 'height', this.$layer.outerHeight( true ) );
 				}
 
-				this.$layer.css({ 'marginTop': 'auto', 'marginBottom': 'auto', 'top': this.verticalPosition, 'bottom': 0 });
+				this.$layer.css({ 'top': this.verticalPosition, 'bottom': 0 });
 			} else {
 				this.$layer.css( this.verticalProperty, this.verticalPosition );
 			}
+		},
+
+		// Get Animation Properties Object
+		getJSAnimationObj: function(offset, isShownEnd){
+			var tmpPos = 0,
+				tmpObj = {};
+
+			// No need to calculate a non-direction or positioned layer
+			if(typeof this.data.showTransition === 'undefined'){
+				return;
+			}
+
+			// Determine if we need to calculate/animate left/right or top/bottom
+			if(this.data.showTransition === 'left' || this.data.showTransition === 'right'){
+
+				// Only return the end position
+				// true when showing layer and calculating end properties
+				if(isShownEnd){
+					tmpObj.marginLeft = 0;
+				}else{
+
+					// Figure Tmp Position
+					if(this.data.showTransition === 'left'){
+						tmpPos = 0 + offset;
+					}else{
+						tmpPos = 0 - offset;
+					}
+
+					// Apply starting position
+					tmpObj.marginLeft = tmpPos + 'px';
+				}
+
+			// we need to animate top property
+			}else if(this.data.showTransition === 'up' || this.data.showTransition === 'down'){
+
+				// Only return the end position
+				// true when showing layer and calculating end properties
+				if(isShownEnd){
+					tmpObj.marginTop = 0;
+				}else{
+
+					if(this.data.showTransition === 'up'){
+						tmpPos = 0 + offset;
+					}else{
+						tmpPos = 0 - offset;
+					}
+
+					// Apply starting position
+					tmpObj.marginTop = tmpPos + 'px';
+				}
+			}
+
+			return tmpObj;
 		},
 
 		// Scale the layer
@@ -3146,7 +3208,7 @@
 
 			if ( typeof this.data.height === 'string' && this.data.height.indexOf( '%' ) !== -1 ) {
 				css.height = ( parseInt( this.data.height, 10 ) / this.scaleRatio ).toString() + '%';
-			}
+			}		
 
 			this.$layer.css( css );
 		},
@@ -3171,12 +3233,16 @@
 				stayDuration = typeof that.data.stayDuration !== 'undefined' ? parseInt( that.data.stayDuration, 10 ) : -1;
 
 			// Animate the layers with CSS3 or with JavaScript
-			if ( this.supportedAnimation === 'javascript' ) {
+			if ( this.supportedAnimation === 'javascript') {
+
+				var oStartProperties = $.extend({}, {'opacity': 0, 'visibility': 'visible'}, this.getJSAnimationObj(offset)), // animation starts w/ these
+					oEndProperties = $.extend({}, {'opacity': 1}, this.getJSAnimationObj(offset, true)); // animation ends with these
+
 				this.$layer
 					.stop()
 					.delay( delay )
-					.css({ 'opacity': 0, 'visibility': 'visible' })
-					.animate( { 'opacity': 1 }, duration * 1000, function() {
+					.css(oStartProperties)
+					.animate(oEndProperties, duration * 1000, function() {
 
 						// Hide the layer after a given time interval
 						if ( stayDuration !== -1 ) {
@@ -3266,10 +3332,12 @@
 
 			// Animate the layers with CSS3 or with JavaScript
 			if ( this.supportedAnimation === 'javascript' ) {
+				var	oEndProperties = $.extend({}, {'opacity': 0}, this.getJSAnimationObj(offset));
+
 				this.$layer
 					.stop()
 					.delay( delay )
-					.animate({ 'opacity': 0 }, duration * 1000, function() {
+					.animate(oEndProperties, duration * 1000, function() {
 						$( this ).css( 'visibility', 'hidden' );
 
 						if ( typeof callback !== 'undefined' ) {
@@ -3318,8 +3386,14 @@
 					}
 				});
 
-				setTimeout( function() {
+				setTimeout( function() {					
 					that.$layer.css( target );
+
+					// Force transition event to fire if adaptiveMode and css display set to none
+					// transitions do not tirgger on elements that are hidden and thus the end event is not fired
+					if(that.adaptiveMode && that.$layer.css('display') == 'none' ){
+						that.$layer.trigger(that.transitionEvent);
+					}
 				}, delay );
 			}
 		},
