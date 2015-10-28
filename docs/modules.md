@@ -280,9 +280,9 @@ Data attributes:
 
 >Sets how much time a layer will stay visible before being hidden automatically.
 
->The layers are animated using CSS3 transitions in most browsers. In IE9 and IE8 (where CSS3 transitions are not supported), the layers will only fade in/out, and in IE7 and older, the layers will appear without any animation.
+>The layers are animated using CSS3 transitions in most browsers. In IE7-9 (where CSS3 transitions are not supported), the layers will animate using jQuery.
 
-Customizable properties: [waitForLayers](api.md#waitforlayers), [autoScaleLayers](api.md#autoscalelayers) and [autoScaleReference](api.md#autoscalereference).
+Customizable properties: [adaptiveMode](api.md#adaptiveMode), [waitForLayers](api.md#waitforlayers), [swipeLayersOut](api.md#swipeLayersOut), [autoScaleLayers](api.md#autoscalelayers) and [autoScaleReference](api.md#autoscalereference).
 
 ---
 

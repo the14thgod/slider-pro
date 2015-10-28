@@ -239,14 +239,15 @@
 
 		layersDefaults: {
 
-			// Indicate if js animations should avoid adding top/left css properties
+			// Indicate if layers should force their animation events on hidden layers
+			// useful when needing to hide elements at certain breakpoints
 			adaptiveMode: false,
 
 			// Indicates whether the slider will wait for the layers to disappear before
 			// going to a new slide
 			waitForLayers: false,
 
-			// Indicates whether the slider will animate the layers when swipping/draging
+			// Indicates whether the slider will animate the layers when swiping/dragging
 			// only applicable with touchSwipe module
 			swipeLayersOut: false,
 

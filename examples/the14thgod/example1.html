@@ -1,0 +1,335 @@
+<!doctype html>
+<!--[if IE 8]> <html class="ie8" lang="en"> <![endif]-->
+<!--[if IE 9]> <html class="ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>SliderPro Test</title>
+	
+	<link rel="stylesheet" type="text/css" href="../../dist/css/slider-pro.min.css" />
+	<style type="text/css">
+		*{margin:0;padding:0;box-sizing:border-box;}
+		body{font-family: Arial,Helvetica,sans-serif;padding:20px;}
+		h1{font-size:20px;color:#0b8592;}
+		p.info{font-size: 13px;line-height: 17px;margin:10px 0 30px;}
+
+		.ie7-disclaimer{
+			margin-bottom: 20px;
+			background: #bf1e39;
+			color:#fff;
+			padding:20px;
+			text-align: center;
+		}
+
+		/* Slider Styles */
+			.sp-mask,
+			.sp-arrows,
+			.sp-buttons{width:1000px !important; /* oveerride so 'overflow' can be visible*/}
+			.sp-slides-container,
+			.sp-buttons{left:-20px; /* shift it back over to center in slider area */}
+			.sp-slides{left:20px; /* offset position of slides to show 'overflown' content */}
+
+			/* Headline */
+				#slider .headline{
+					font-size: 24px;
+					background: #0b8592;
+					text-shadow: -2px 2px 0 #02454c;
+					padding: 10px 20px 12px;
+					line-height: 29px;
+					color: #fff;
+					margin: 0;
+					top: 30px !important;
+				}
+				#slider .headline:before{
+					content: '';
+					position: absolute;
+					top:0;
+					left:-20px;
+					bottom:0;
+					width: 20px;
+					background: #40b5c2;
+				}
+				#slider .headline:after{
+					content: '';
+					position: absolute;
+					bottom:-10px;
+					left:-20px;
+					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: 0 20px 10px 0;
+					border-color: transparent #02454c transparent transparent;
+				}
+
+				/* IE7-8 Overrides */
+					.ie7 #slider .headline:before,
+					.ie8 #slider .headline:before,
+					.ie7 #slider .headline:after,
+					.ie8 #slider .headline:after{display:none;}
+
+			/* Content/Quote */
+				#slider .content{
+					padding:20px;
+					background: #000;
+					background: rgba(0,0,0,.4);
+					top:135px !important;
+					left:40px !important;
+				}
+				#slider .content blockquote{color:#fff;font-size:15px;}
+				#slider .content blockquote cite{display: block;text-align: right;margin:5px 0 0;font-size:12px;}
+
+			/* Button */
+				#slider .btn{top:270px !important;}
+				#slider .btn:link,
+				#slider .btn:visited{
+					position: absolute;
+					background: #d4b98c;
+					text-shadow: -1px 1px 0 #02454c;
+					display: block;
+					height: 38px;
+					line-height: 38px;
+					padding:0 20px;
+					text-align: center;
+					font-size: 18px;
+					color: #fff;
+					background: #40b5c2;
+					text-decoration: none;
+				}
+				#slider .btn:hover{background: #0b8592;}
+
+				#slider .btn:before{
+					content: '';
+					position: absolute;
+					top:0;
+					left:-20px;
+					bottom:0;
+					width: 20px;
+					background: #0b8592;
+				}
+
+				#slider .btn:after{
+					content: '';
+					position: absolute;
+					bottom:-10px;
+					left:-20px;
+					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: 0 20px 10px 0;
+					border-color: transparent #02454c transparent transparent;
+				}
+
+				/* IE8 Overrides */
+					.ie7 #slider .btn:before,
+					.ie8 #slider .btn:before,
+					.ie7 #slider .btn:after,
+					.ie8 #slider .btn:after{display:none;}
+
+			/* Arrows */
+				.sp-previous-arrow:before,
+				.sp-previous-arrow:after,
+				.sp-next-arrow:before,
+				.sp-next-arrow:after{display:none;}
+
+				.sp-horizontal .sp-arrows{margin-top:0;}
+				.sp-arrow{
+					background: url('images/sprite.png') no-repeat;
+					width: 12px !important; /* IE8 Override */
+					height: 63px !important; /* IE8 Override */
+					margin-top:-43px;
+				}
+
+				.sp-previous-arrow{background-position: 0 -87px;left:30px !important;border:none !important;}
+				.sp-next-arrow{background-position: -13px -87px;right:30px !important;border:none !important;}
+
+				.sp-previous-arrow:hover{background-position: -26px -87px;}
+				.sp-next-arrow:hover{background-position: -39px -87px;}
+
+			/* Buttons(Pager) */
+				.sp-buttons{margin-top:-35px;}
+				.sp-button{
+					width: 15px;
+					height: 15px;
+					border: 1px solid #02454c;
+					background: #68d0db;
+					border-radius: 0;
+					margin: 4px;
+				}
+				.sp-button.sp-selected-button{background:#0b8592;}
+
+		/* Less Than Desktop */
+		@media only screen and (min-width: 768px) and (max-width: 1000px) {
+			/* Structure Overrides */
+				#slider{width:728px !important;}
+				.sp-mask,
+				.sp-arrows,
+				.sp-buttons{width:768px !important; /* oveerride so 'overflow' can be visible*/}
+				.sp-mask{height:264px !important;}
+
+				.sp-slide,
+				.sp-image-container{width: 728px !important; height: 265px !important;}
+
+				/* Arrows */
+					.sp-arrow{margin-top:-30px;}
+
+			/* Layer/Design Overrides */
+
+				/* Headlines */
+					#slider .headline{
+						font-size: 17px;
+						padding: 8px 20px 10px;
+					}
+
+				/* Content/Quote */
+					#slider .content{
+						padding:15px 20px;
+						background: rgba(0,0,0,.6);
+						top:100px !important;
+					}
+
+				/* Button */
+					#slider .btn{top:200px !important;}
+		}
+
+		/* Less Than Tablet */
+		@media only screen and (min-width: 320px) and (max-width: 768px) {
+			/* Structure Overrides */
+				#slider,
+				.sp-mask,
+				.sp-arrows,
+				.sp-buttons{width:320px !important; /* oveerride so 'overflow' can be visible*/}
+
+				/* Remove Offsets */
+				.sp-slides-container,
+				.sp-buttons,
+				.sp-slides{left:0;}
+
+				/* Slide (will center adaptive button) */
+					.sp-slide{text-align: center;}
+
+				/* Buttons(Pager) */
+					.sp-buttons{margin-top:0;position:absolute;top:80px;}
+
+				/* Arrows */
+					.sp-horizontal .sp-arrows{top:25px;}
+					.sp-arrow{margin-top:0;}
+					.sp-previous-arrow{left:10px !important;}
+					.sp-next-arrow{right:10px !important;}
+
+
+			/* Layer/Design Overrides */
+
+				/* Headlines */
+					#slider .headline{
+						font-size: 15px;
+						padding: 6px 20px 8px;
+						text-align: center;
+						background: none;
+						color: #0b8592;
+						position: static;
+						text-shadow: none;
+						margin:5px 0;
+						display: block !important;
+					}
+					#slider .headline:before,
+					#slider .headline:after{display:none;}
+
+				/* Content */
+					#slider .content{display:none;}
+
+				/* Button */
+					#slider .btn:link{
+						position: static;
+						display: inline-block !important;
+						margin:0 auto;
+						max-width: 180px;
+					}
+					#slider .btn:before,
+					#slider .btn:after{display:none;}
+
+		}
+	</style>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="../../dist/js/jquery.sliderPro.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#slider').sliderPro({
+				width: 960,
+				height: 350,
+				slideDistance: 20, // prevent next slides from 'overflowing'
+				waitForLayers: true, // out animations of layers will finish before switching slides
+				swipeLayersOut: true, // swipe/drag animates layers out
+				arrows: true,
+				adaptiveMode: true,
+				responsive: false, // disables % based scaling on non layer objects
+				autoScaleLayers: false, // disables scaling of layer objects
+				breakpoints: {
+					768: {
+						autoHeight: true
+					}
+				}
+			});
+		});
+	</script>
+</head>
+
+<body>
+<!--[if IE 7]>
+	<p class="ie7-disclaimer">I no longer support IE7 personally or professionally so the layout is broken but you can still see animations working. - Justin</p>
+<![endif]-->
+	<h1>Adaptive Slider</h1>
+	<p class="info">This slide example is set up so that CSS can make the mobile view different than the desktop/tablet views</p>
+
+	<div id="slider" class="slider-pro">
+		<div class="sp-slides">
+			<div class="sp-slide">
+				<a href="http://kotaku.com"><img class="sp-image" src="images/img1.jpg" /></a>
+
+				<h2 class="sp-layer headline" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">Slide Headline #1</h2>
+
+				<div class="sp-layer content" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">
+					<blockquote>
+						<p>We all make choices, but in the end our choices make us.</p>
+						<cite>&mdash; Andrew Ryan</cite>
+					</blockquote>
+				</div>
+
+				<a class="sp-layer btn" href="http://google.com" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">Learn More</a>
+			</div>
+
+			<div class="sp-slide">
+				<a href="http://kotaku.com"><img class="sp-image" src="images/img2.jpg" /></a>
+
+				<h2 class="sp-layer headline" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">Slide Headline #2</h2>
+
+				<div class="sp-layer content" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">
+					<blockquote>
+						<p>Names don't matter. What's important is how you live your life</p>
+						<cite>&mdash; Ramza Beoulve</cite>
+					</blockquote>
+				</div>
+
+				<a class="sp-layer btn" href="http://google.com" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">Learn More</a>
+			</div>
+
+			<div class="sp-slide">
+				<a href="http://kotaku.com"><img class="sp-image" src="images/img3.jpg" /></a>
+
+				<h2 class="sp-layer headline" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">Slide Headline #3</h2>
+
+				<div class="sp-layer content" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">
+					<blockquote>
+						<p>Willump and I have a whole world to explore. Don't get in our way!</p>
+						<cite>&mdash; Nunu</cite>
+					</blockquote>
+				</div>
+
+				<a class="sp-layer btn" href="http://google.com" data-show-transition="right" data-hide-transition="left" data-show-delay="400" data-hide-delay="0">Learn More</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

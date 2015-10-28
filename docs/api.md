@@ -273,9 +273,21 @@ $( '#my-slider' ).sliderPro({
 
 >*Default value:* true
 
+#### adaptiveMode ####
+
+>Indicate if layers should force their animation events on hidden layers. Useful when needing to hide elements at certain breakpoints
+
+>*Default value:* false
+
 #### waitForLayers ####
 
 >Indicates whether the slider will wait for the layers to disappear before going to a new slide.
+
+>*Default value:* false
+
+#### swipeLayersOut ####
+
+>Indicates whether the slider will animate the layers when swiping/dragging. Only applicable with touchSwipe module
 
 >*Default value:* false
 
