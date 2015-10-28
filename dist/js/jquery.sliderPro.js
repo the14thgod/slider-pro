@@ -1,5 +1,5 @@
 /*!
-*  - v1.2.4
+*  - v1.2.5
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -3037,6 +3037,8 @@
 
 		// Set the size and position of the layer
 		_setStyle: function() {
+			var that = this;
+
 			this.styled = true;
 
 			// Get the data attributes specified in HTML
@@ -3071,6 +3073,43 @@
 			} else {
 				this.verticalProperty = 'center';
 			}
+
+			// Figure out easing
+			var easingTypes = {
+					cssEaseIn: {
+						type: 'css',
+						name: 'easingIn',
+						setting: typeof this.data.easingIn !== 'undefined' ? this.data.easingIn : 'ease'
+					},
+					jsEaseIn: {
+						type: 'js',
+						name: 'jsEasingIn',
+						setting: typeof this.data.jsEasingIn !== 'undefined' ? this.data.jsEasingIn : 'swing'
+					},
+					cssEaseOut: {
+						type: 'css',
+						name: 'easingOut',
+						setting: typeof this.data.easingOut !== 'undefined' ? this.data.easingIn : 'ease'
+					},
+					jsEaseOut: {
+						type: 'js',
+						name: 'jsEasingOut',
+						setting: typeof this.data.jsEasingOut !== 'undefined' ? this.data.jsEasingOut : 'swing'
+					}
+				};
+
+			// Cycle thru and reset data attributes for show/hide functions to use
+			// We set this up here so we don't have to do it everytime a layer shows/hides
+			$.each(easingTypes, function(i, ease){
+				// Update DOM
+				if(ease.type == 'css'){
+					// If custom easing then just pass it thru otherwise get the equivalent bezier string
+					that.data[ease.name] = ease.setting.indexOf(',') > -1 ? ease.setting : that.getCSSEasingString(ease.setting);
+				}else{
+					// Add it to the DOM in case the setting wasn't there
+					that.data[ease.name] = ease.setting;
+				}
+			});
 
 			this._setPosition();
 
@@ -3111,6 +3150,43 @@
 			} else {
 				this.$layer.css( this.verticalProperty, this.verticalPosition );
 			}
+		},
+
+		// Get CSS Easing String
+		getCSSEasingString: function(name){
+			var easingFunctions =  {
+					"linear": "0.250, 0.250, 0.750, 0.750",
+					"ease": "0.250, 0.100, 0.250, 1.000",
+					"ease-in": "0.420, 0.000, 1.000, 1.000",
+					"ease-out": "0.000, 0.000, 0.580, 1.000",
+					"ease-in-out": "0.420, 0.000, 0.580, 1.000",
+					"easeInQuad": "0.550, 0.085, 0.680, 0.530",
+					"easeInCubic": "0.550, 0.055, 0.675, 0.190",
+					"easeInQuart": "0.895, 0.030, 0.685, 0.220",
+					"easeInQuint": "0.755, 0.050, 0.855, 0.060",
+					"easeInSine": "0.470, 0.000, 0.745, 0.715",
+					"easeInExpo": "0.950, 0.050, 0.795, 0.035",
+					"easeInCirc": "0.600, 0.040, 0.980, 0.335",
+					"easeInBack": "0.600, -0.280, 0.735, 0.045",
+					"easeOutQuad": "0.250, 0.460, 0.450, 0.940",
+					"easeOutCubic": "0.215, 0.610, 0.355, 1.000",
+					"easeOutQuart": "0.165, 0.840, 0.440, 1.000",
+					"easeOutQuint": "0.230, 1.000, 0.320, 1.000",
+					"easeOutSine": "0.390, 0.575, 0.565, 1.000",
+					"easeOutExpo": "0.190, 1.000, 0.220, 1.000",
+					"easeOutCirc": "0.075, 0.820, 0.165, 1.000",
+					"easeOutBack": "0.175, 0.885, 0.320, 1.275",
+					"easeInOutQuad": "0.455, 0.030, 0.515, 0.955",
+					"easeInOutCubic": "0.645, 0.045, 0.355, 1.000",
+					"easeInOutQuart": "0.770, 0.000, 0.175, 1.000",
+					"easeInOutQuint": "0.860, 0.000, 0.070, 1.000",
+					"easeInOutSine": "0.445, 0.050, 0.550, 0.950",
+					"easeInOutExpo": "1.000, 0.000, 0.000, 1.000",
+					"easeInOutCirc": "0.785, 0.135, 0.150, 0.860",
+					"easeInOutBack": "0.680, -0.550, 0.265, 1.550"
+				} // Credit to: Matthew Lein, @matthewlein - http://matthewlein.com/ceaser/
+
+			return easingFunctions[name];
 		},
 
 		// Get Animation Properties Object
@@ -3231,7 +3307,7 @@
 				offset = typeof this.data.showOffset !== 'undefined' ? this.data.showOffset : 50,
 				duration = typeof this.data.showDuration !== 'undefined' ? this.data.showDuration / 1000 : 0.4,
 				delay = typeof this.data.showDelay !== 'undefined' ? this.data.showDelay : 10,
-				stayDuration = typeof that.data.stayDuration !== 'undefined' ? parseInt( that.data.stayDuration, 10 ) : -1;
+				stayDuration = typeof that.data.stayDuration !== 'undefined' ? parseInt( that.data.stayDuration, 10 ) : -1;				
 
 			// Animate the layers with CSS3 or with JavaScript
 			if ( this.supportedAnimation === 'javascript') {
@@ -3243,7 +3319,7 @@
 					.stop()
 					.delay( delay )
 					.css(oStartProperties)
-					.animate(oEndProperties, duration * 1000, function() {
+					.animate(oEndProperties, duration * 1000, this.data.jsEasingIn, function() {
 
 						// Hide the layer after a given time interval
 						if ( stayDuration !== -1 ) {
@@ -3265,6 +3341,7 @@
 				start[ this.vendorPrefix + 'transform' ] = 'scale(' + this.scaleRatio + ')';
 				target[ this.vendorPrefix + 'transform' ] = 'scale(' + this.scaleRatio + ')';
 				target[ this.vendorPrefix + 'transition' ] = 'opacity ' + duration + 's';
+				target[ this.vendorPrefix + 'transition-timing-function'] = 'cubic-bezier(' + this.data.easingIn + ')';
 
 				if ( typeof this.data.showTransition !== 'undefined' ) {
 					if ( this.data.showTransition === 'left' ) {
@@ -3338,7 +3415,7 @@
 				this.$layer
 					.stop()
 					.delay( delay )
-					.animate(oEndProperties, duration * 1000, function() {
+					.animate(oEndProperties, duration * 1000, this.data.jsEasingOut, function() {
 						$( this ).css( 'visibility', 'hidden' );
 
 						if ( typeof callback !== 'undefined' ) {
@@ -3351,6 +3428,7 @@
 
 				target[ this.vendorPrefix + 'transform' ] = 'scale(' + this.scaleRatio + ')';
 				target[ this.vendorPrefix + 'transition' ] = 'opacity ' + duration + 's';
+				target[ this.vendorPrefix + 'transition-timing-function'] = 'cubic-bezier(' + this.data.easingIn + ')';
 
 				if ( typeof this.data.hideTransition !== 'undefined' ) {
 					if ( this.data.hideTransition === 'left' ) {

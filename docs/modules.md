@@ -280,7 +280,28 @@ Data attributes:
 
 >Sets how much time a layer will stay visible before being hidden automatically.
 
->The layers are animated using CSS3 transitions in most browsers. In IE7-9 (where CSS3 transitions are not supported), the layers will animate using jQuery.
+##### data-ease-in and data-ease-out #####
+
+>Determines which easing function to use to show/hide all animatable properties. Can be set to a pre-defined option or a custom belvier may be used.
+>
+>*Default value:* ease
+>*Custom Belvier:* P0, P1, P2, P3
+>
+>*Available options:* linear, ease, ease-in, ease-out, ease-in-out, easeInQuad, easeInCubic, easeInQuart, easeInQuint, easeInSine, easeInExpo, easeInCirc, easeInBack, easeOutQuad, easeOutCubic, easeOutQuart, easeOutQuint, easeOutSine, easeOutExpo, easeOutCirc, easeOutBack, easeInOutQuad, easeInOutCubic, easeInOutQuart, easeInOutQuint, easeInOutSine, easeInOutExpo, easeInOutCirc, easeInOutBack
+>
+>Credit to: Matthew Lein, @matthewlein - http://matthewlein.com/ceaser/
+
+##### data-js-ease-in and data-js-ease-out #####
+
+>Determines which easing function to use to show/hide all animatable properties. Must be set to match your included jQuery easing library.
+>
+>*Default value:* swing
+>
+>Recommended: [jQuery Easing](https://github.com/gdsmith/jquery.easing) - minified 4kb
+>
+>Recommended: Use a LT IE10 conditional comment to include easing library unless your users have outdated browsers.
+
+The layers are animated using CSS3 transitions in most browsers. In IE7-9 (where CSS3 transitions are not supported), the layers will animate using jQuery.
 
 Customizable properties: [adaptiveMode](api.md#adaptiveMode), [waitForLayers](api.md#waitforlayers), [swipeLayersOut](api.md#swipeLayersOut), [autoScaleLayers](api.md#autoscalelayers) and [autoScaleReference](api.md#autoscalereference).
 
