@@ -244,13 +244,21 @@ Data attributes:
 
 >Sets the vertical position of the layer, using the value specified for data-position as a reference point. Can be set to a fixed or percentage value.
 
-##### data-show-transition #####
+##### data-show-transition-x #####
 
->Sets the transition of the layer when it appears in the slide. Can be set to 'left', 'right', 'up' or 'down', these values describing the direction in which the layer will move when it appears.
+>Sets the horizontal transition of the layer when it appears in the slide. Can be set to 'left' or 'right.' These values describing the direction in which the layer will move when it appears.
 
-##### data-show-offset #####
+##### data-show-transition-y #####
 
->Sets an offset for the position of the layer from which the layer will be animated towards the final position when it appears in the slide. Needs to be set to a fixed value.
+>Sets the vertical transition of the layer when it appears in the slide. Can be set to 'up' or 'down.' These values describing the direction in which the layer will move when it appears.
+
+##### data-show-offset-x #####
+
+>Sets the horizontal offset for the position of the layer from which the layer will be animated towards the final position when it appears in the slide. Needs to be set to a fixed value.
+
+##### data-show-offset-y #####
+
+>Sets the vertical offset for the position of the layer from which the layer will be animated towards the final position when it appears in the slide. Needs to be set to a fixed value.
 
 ##### data-show-duration #####
 
@@ -260,13 +268,21 @@ Data attributes:
 
 >Sets a delay for the show transition. This delay starts from the moment when the transition to the new slide starts.
 
-##### data-hide-transition #####
+##### data-hide-transition-x #####
 
->Sets the transition of the layer when it disappears from the slide. Can be set to 'left', 'right', 'up' or 'down', these values describing the direction in which the layer will move when it disappears.
+>Sets the horizontal transition of the layer when it disappears from the slide. Can be set to 'left' or 'right.' These values describing the direction in which the layer will move when it disappears.
 
-##### data-hide-offset #####
+##### data-hide-transition-y #####
 
->Sets an offset for the position of the layer towards which the layer will be animated from the original position when it disappears from the slide. Needs to be set to a fixed value.
+>Sets the vertical transition of the layer when it disappears from the slide. Can be set to 'up' or 'down.' These values describing the direction in which the layer will move when it disappears.
+
+##### data-hide-offset-x #####
+
+>Sets the horizontal offset for the position of the layer towards which the layer will be animated from the original position when it disappears from the slide. Needs to be set to a fixed value.
+
+##### data-hide-offset-y #####
+
+>Sets the vertical offset for the position of the layer towards which the layer will be animated from the original position when it disappears from the slide. Needs to be set to a fixed value.
 
 ##### data-hide-duration #####
 

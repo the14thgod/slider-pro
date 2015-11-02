@@ -507,53 +507,36 @@
 		},
 
 		// Get Animation Properties Object
-		getJSAnimationObj: function(offset, isShownEnd){
+		getJSAnimationObj: function(offsetX, offsetY, transitionX, transitionY, isReverse){
 			var tmpPos = 0,
 				tmpObj = {};
 
-			// No need to calculate a non-direction or positioned layer
-			if(typeof this.data.showTransition === 'undefined'){
-				return;
+			// Determine if we need to calculate/animate left/right or top/bottom
+			if(typeof transitionX !== 'undefined'){
+
+				// Left / Right offset
+				if(!isReverse){
+					tmpPos = transitionX == 'left' ? 0 + offsetX : 0 - offsetX;
+				}else{
+					tmpPos = transitionX == 'left' ? 0 - offsetX : 0 + offsetX;
+				}
+
+				// Apply starting position
+				tmpObj.marginLeft = tmpPos + 'px';	
 			}
 
-			// Determine if we need to calculate/animate left/right or top/bottom
-			if(this.data.showTransition === 'left' || this.data.showTransition === 'right'){
+			// Vertical offset needs to be added to tempoary object
+			if(typeof transitionY !== 'undefined'){
 
-				// Only return the end position
-				// true when showing layer and calculating end properties
-				if(isShownEnd){
-					tmpObj.marginLeft = 0;
+				// Up / Down offset
+				if(!isReverse){
+					tmpPos = transitionY == 'up' ? 0 + offsetY : 0 - offsetY;
 				}else{
-
-					// Figure Tmp Position
-					if(this.data.showTransition === 'left'){
-						tmpPos = 0 + offset;
-					}else{
-						tmpPos = 0 - offset;
-					}
-
-					// Apply starting position
-					tmpObj.marginLeft = tmpPos + 'px';
+					tmpPos = transitionY == 'up' ? 0 - offsetY : 0 + offsetY;
 				}
 
-			// we need to animate top property
-			}else if(this.data.showTransition === 'up' || this.data.showTransition === 'down'){
-
-				// Only return the end position
-				// true when showing layer and calculating end properties
-				if(isShownEnd){
-					tmpObj.marginTop = 0;
-				}else{
-
-					if(this.data.showTransition === 'up'){
-						tmpPos = 0 + offset;
-					}else{
-						tmpPos = 0 - offset;
-					}
-
-					// Apply starting position
-					tmpObj.marginTop = tmpPos + 'px';
-				}
+				// Apply starting position
+				tmpObj.marginTop = tmpPos + 'px';
 			}
 
 			return tmpObj;
@@ -621,16 +604,20 @@
 			}
 
 			var that = this,
-				offset = typeof this.data.showOffset !== 'undefined' ? this.data.showOffset : 50,
+				offsetX = typeof this.data.showOffsetX !== 'undefined' ? this.data.showOffsetX : 50,
+				offsetY = typeof this.data.showOffsetY !== 'undefined' ? this.data.showOffsetY : 50,
 				duration = typeof this.data.showDuration !== 'undefined' ? this.data.showDuration / 1000 : 0.4,
 				delay = typeof this.data.showDelay !== 'undefined' ? this.data.showDelay : 10,
 				stayDuration = typeof that.data.stayDuration !== 'undefined' ? parseInt( that.data.stayDuration, 10 ) : -1;				
 
 			// Animate the layers with CSS3 or with JavaScript
 			if ( this.supportedAnimation === 'javascript') {
-
-				var oStartProperties = $.extend({}, {'opacity': 0, 'visibility': 'visible'}, this.getJSAnimationObj(offset)), // animation starts w/ these
-					oEndProperties = $.extend({}, {'opacity': 1}, this.getJSAnimationObj(offset, true)); // animation ends with these
+				// animation starts w/ these
+				var oStartProperties = $.extend({}, {'opacity': 0, 'visibility': 'visible'}, 
+							this.getJSAnimationObj(offsetX, offsetY, this.data.showTransitionX, this.data.showTransitionY)
+						), 
+				// animation ends with these
+					oEndProperties = $.extend({}, {'opacity': 1}, {'marginTop': 0, 'marginLeft': 0}); 
 
 				this.$layer
 					.stop()
@@ -653,23 +640,40 @@
 			} else {
 				var start = { 'opacity': 0, 'visibility': 'visible' },
 					target = { 'opacity': 1 },
-					transformValues = '';
+					transformValues = '',
+					transformX = '0',
+					transformY = '0';
 
 				start[ this.vendorPrefix + 'transform' ] = 'scale(' + this.scaleRatio + ')';
 				target[ this.vendorPrefix + 'transform' ] = 'scale(' + this.scaleRatio + ')';
 				target[ this.vendorPrefix + 'transition' ] = 'opacity ' + duration + 's';
 				target[ this.vendorPrefix + 'transition-timing-function'] = 'cubic-bezier(' + this.data.easingIn + ')';
 
-				if ( typeof this.data.showTransition !== 'undefined' ) {
-					if ( this.data.showTransition === 'left' ) {
-						transformValues = offset + 'px, 0';
-					} else if ( this.data.showTransition === 'right' ) {
-						transformValues = '-' + offset + 'px, 0';
-					} else if ( this.data.showTransition === 'up' ) {
-						transformValues = '0, ' + offset + 'px';
-					} else if ( this.data.showTransition === 'down') {
-						transformValues = '0, -' + offset + 'px';
+				// Determine X Offset Direction
+				if ( typeof this.data.showTransitionX !== 'undefined' ) {
+
+					if (this.data.showTransitionX == 'left') {
+						transformX = offsetX + 'px';
+					} else {
+						transformX = '-' + offsetX + 'px';
 					}
+
+				}
+
+				// Determine Y Offset Direction
+				if ( typeof this.data.showTransitionY !== 'undefined' ) {
+
+					if (this.data.showTransitionY == 'up') {
+						transformY = offsetY + 'px';
+					} else {
+						transformY = '-' + offsetY + 'px';
+					}
+
+				}
+
+				// Combine directions together
+				if(typeof this.data.showTransitionX !== 'undefined' || typeof this.data.showTransitionY !== 'undefined'){
+					transformValues = transformX + ', ' + transformY;
 
 					start[ this.vendorPrefix + 'transform' ] += this.supportedAnimation === 'css-3d' ? ' translate3d(' + transformValues + ', 0)' : ' translate(' + transformValues + ')';
 					target[ this.vendorPrefix + 'transform' ] += this.supportedAnimation === 'css-3d' ? ' translate3d(0, 0, 0)' : ' translate(0, 0)';
@@ -714,7 +718,8 @@
 			}
 
 			var that = this,
-				offset = typeof this.data.hideOffset !== 'undefined' ? this.data.hideOffset : 50,
+				offsetX = typeof this.data.hideOffsetX !== 'undefined' ? this.data.hideOffsetX : 50,
+				offsetY = typeof this.data.hideOffsetY !== 'undefined' ? this.data.hideOffsetY : 50,
 				duration = typeof this.data.hideDuration !== 'undefined' ? this.data.hideDuration / 1000 : 0.4,
 				delay = typeof this.data.hideDelay !== 'undefined' ? this.data.hideDelay : 10;
 
@@ -726,8 +731,10 @@
 			}
 
 			// Animate the layers with CSS3 or with JavaScript
-			if ( this.supportedAnimation === 'javascript' ) {
-				var	oEndProperties = $.extend({}, {'opacity': 0}, this.getJSAnimationObj(offset));
+			if ( this.supportedAnimation === 'javascript') {
+				var	oEndProperties = $.extend({}, {'opacity': 0}, 
+						this.getJSAnimationObj(offsetX, offsetY, this.data.hideTransitionX, this.data.hideTransitionY, true)
+					);
 
 				this.$layer
 					.stop()
@@ -741,22 +748,40 @@
 					});
 			} else {
 				var transformValues = '',
+					transformX = '0',
+					transformY = '0',
 					target = { 'opacity': 0 };
 
 				target[ this.vendorPrefix + 'transform' ] = 'scale(' + this.scaleRatio + ')';
 				target[ this.vendorPrefix + 'transition' ] = 'opacity ' + duration + 's';
 				target[ this.vendorPrefix + 'transition-timing-function'] = 'cubic-bezier(' + this.data.easingIn + ')';
 
-				if ( typeof this.data.hideTransition !== 'undefined' ) {
-					if ( this.data.hideTransition === 'left' ) {
-						transformValues = '-' + offset + 'px, 0';
-					} else if ( this.data.hideTransition === 'right' ) {
-						transformValues = offset + 'px, 0';
-					} else if ( this.data.hideTransition === 'up' ) {
-						transformValues = '0, -' + offset + 'px';
-					} else if ( this.data.hideTransition === 'down' ) {
-						transformValues = '0, ' + offset + 'px';
+				// Determine X Offset Direction
+				if(typeof this.data.hideTransitionX !== 'undefined'){
+
+					if ( this.data.hideTransitionX == 'left' ) {
+						transformX = '-' + offsetX + 'px';
+					} else {
+						transformX = offsetX + 'px';
 					}
+
+				}
+
+				// Determine Y Offset Direction
+				if(typeof this.data.hideTransitionY !== 'undefined'){
+
+					if ( this.data.hideTransitionY == 'up' ) {
+						transformY = '-' + offsetY + 'px';
+					} else {
+						transformY = offsetY + 'px';
+					}
+
+				}
+
+				// Combine directions together
+				if(typeof this.data.hideTransitionX !== 'undefined' || typeof this.data.hideTransitionY !== 'undefined'){
+
+					transformValues = transformX + ', ' + transformY;
 
 					target[ this.vendorPrefix + 'transform' ] += this.supportedAnimation === 'css-3d' ? ' translate3d(' + transformValues + ', 0)' : ' translate(' + transformValues + ')';
 					target[ this.vendorPrefix + 'transition' ] += ', ' + this.vendorPrefix + 'transform ' + duration + 's';
