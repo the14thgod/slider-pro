@@ -301,7 +301,8 @@ Data attributes:
 >Determines which easing function to use to show/hide all animatable properties. Can be set to a pre-defined option or a custom belvier may be used.
 >
 >*Default value:* ease
->*Custom Belvier:* P0, P1, P2, P3
+>
+>*-or- Custom Belvier:* P0, P1, P2, P3
 >
 >*Available options:* linear, ease, ease-in, ease-out, ease-in-out, easeInQuad, easeInCubic, easeInQuart, easeInQuint, easeInSine, easeInExpo, easeInCirc, easeInBack, easeOutQuad, easeOutCubic, easeOutQuart, easeOutQuint, easeOutSine, easeOutExpo, easeOutCirc, easeOutBack, easeInOutQuad, easeInOutCubic, easeInOutQuart, easeInOutQuint, easeInOutSine, easeInOutExpo, easeInOutCirc, easeInOutBack
 >
